@@ -1,19 +1,39 @@
-﻿namespace AdventOfCode2024.Solver
+﻿using System.Text.RegularExpressions;
+
+namespace AdventOfCode2024.Solver
 {
-    internal class Day01(int day) : BaseSolver(day)
+    internal partial class Day01() : BaseSolver
     {
-        public override string PuzzleTitle { get; } = "Add challenge name here...";
+        public override string PuzzleTitle { get; } = "Historian Hysteria";
+
+        private List<int> _left = [];
+        private List<int> _right = [];
 
         public override string GetSolution1()
         {
-            // Case 1
-            return "Not implemented !";
+            ExtractData();
+            _left.Sort();
+            _right.Sort();
+
+            return _left
+                .Zip(_right, (left, right) => (left, right))
+                .Aggregate(0, (total, zip) => total + Math.Abs(zip.left - zip.right))
+                .ToString();
         }
 
         public override string GetSolution2()
         {
-            // Case 2
-            return "Not implemented !";
+            ExtractData();
+            return _left
+                .Aggregate(0, (total, currentValue) => total + (currentValue * _right.Count(v => v == currentValue)))
+                .ToString();
+        }
+
+        private void ExtractData()
+        {
+            Regex _rgxExtractor = new(@"^(?<left>\d+) +(?<right>\d+)$");
+            _left = _rawData.ConvertAll(t => int.Parse(_rgxExtractor.Match(t).Groups["left"].Value));
+            _right = _rawData.ConvertAll(t => int.Parse(_rgxExtractor.Match(t).Groups["right"].Value));
         }
     }
 }
