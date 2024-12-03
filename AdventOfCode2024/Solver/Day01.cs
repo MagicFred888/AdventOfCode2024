@@ -4,6 +4,9 @@ namespace AdventOfCode2024.Solver
 {
     internal partial class Day01() : BaseSolver
     {
+        [GeneratedRegex(@"^(?<left>\d+) +(?<right>\d+)$")]
+        private static partial Regex LeftRightRegex();
+
         public override string PuzzleTitle { get; } = "Historian Hysteria";
 
         private List<int> _left = [];
@@ -31,7 +34,7 @@ namespace AdventOfCode2024.Solver
 
         private void ExtractData()
         {
-            Regex _rgxExtractor = new(@"^(?<left>\d+) +(?<right>\d+)$");
+            Regex _rgxExtractor = LeftRightRegex();
             _left = _rawData.ConvertAll(t => int.Parse(_rgxExtractor.Match(t).Groups["left"].Value));
             _right = _rawData.ConvertAll(t => int.Parse(_rgxExtractor.Match(t).Groups["right"].Value));
         }

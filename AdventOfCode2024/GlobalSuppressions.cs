@@ -7,4 +7,3 @@ using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Blocker Code Smell", "S2368:Public methods should not have multidimensional array parameters", Justification = "This is a debug methode to display an array", Scope = "member", Target = "~M:AdventOfCode2024.Tools.Tools.DebugPrint(System.Object[,],System.Collections.Generic.Dictionary{System.String,System.String},System.String)")]
 [assembly: SuppressMessage("Blocker Code Smell", "S2368:Public methods should not have multidimensional array parameters", Justification = "This is a debug methode to display an array", Scope = "member", Target = "~M:AdventOfCode2024.Tools.Tools.DebugPrint(System.Char[,])")]
-[assembly: SuppressMessage("Performance", "SYSLIB1045:Convert to 'GeneratedRegexAttribute'.", Justification = "<Pending>", Scope = "member", Target = "~M:AdventOfCode2024.Solver.Day01.ExtractData")]
