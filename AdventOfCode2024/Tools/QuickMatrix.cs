@@ -18,21 +18,31 @@ namespace AdventOfCode2024.Tools
             }
         }
 
-        public int Width { get; private set; }
+        public int ColCount { get; private set; }
 
-        public int Height { get; private set; }
+        public int RowCount { get; private set; }
 
         public List<List<CellInfo>> Rows { get; private set; }
 
+        public List<List<int>> RowsInt
+        {
+            get { return Rows.ConvertAll(r => r.ConvertAll(v => int.Parse(v.Value))); }
+        }
+
         public List<List<CellInfo>> Cols { get; private set; }
+
+        public List<List<int>> ColInt
+        {
+            get { return Cols.ConvertAll(c => c.ConvertAll(v => int.Parse(v.Value))); }
+        }
 
         public List<CellInfo> Cells { get; private set; }
 
         public QuickMatrix()
         {
             _data = new CellInfo[0, 0];
-            Width = 0;
-            Height = 0;
+            ColCount = 0;
+            RowCount = 0;
             Rows = [];
             Cols = [];
             Cells = [];
@@ -46,9 +56,9 @@ namespace AdventOfCode2024.Tools
             {
                 if (y == 0)
                 {
-                    Width = rawData[y].Length;
-                    Height = rawData.Count;
-                    _data = new CellInfo[Width, Height];
+                    ColCount = separator == string.Empty ? rawData.Max(v => v.Length) : rawData.Max(v => v.Split(separator).Length);
+                    RowCount = rawData.Count;
+                    _data = new CellInfo[ColCount, RowCount];
                 }
                 string line = rawData[y];
                 if (string.IsNullOrEmpty(separator))
@@ -88,8 +98,8 @@ namespace AdventOfCode2024.Tools
                 }
             }
             _data = rotated;
-            Width = height;
-            Height = width;
+            ColCount = height;
+            RowCount = width;
 
             // Compute other properties
             ComputeOtherProperties();
@@ -109,8 +119,8 @@ namespace AdventOfCode2024.Tools
                 }
             }
             _data = rotated;
-            Width = height;
-            Height = width;
+            ColCount = height;
+            RowCount = width;
 
             // Compute other properties
             ComputeOtherProperties();
@@ -184,8 +194,8 @@ namespace AdventOfCode2024.Tools
                 }
             }
             _data = rotated;
-            Width = height;
-            Height = width;
+            ColCount = height;
+            RowCount = width;
 
             // Compute other properties
             ComputeOtherProperties();
@@ -195,7 +205,7 @@ namespace AdventOfCode2024.Tools
 
         public CellInfo? Cell(int x, int y)
         {
-            if (x < 0 || x >= Width || y < 0 || y >= Height)
+            if (x < 0 || x >= ColCount || y < 0 || y >= RowCount)
             {
                 return null;
             }
@@ -206,7 +216,7 @@ namespace AdventOfCode2024.Tools
 
         public string CellStr(int x, int y, string valueIfNull = "")
         {
-            if (x < 0 || x >= Width || y < 0 || y >= Height)
+            if (x < 0 || x >= ColCount || y < 0 || y >= RowCount)
             {
                 return valueIfNull;
             }
@@ -217,10 +227,10 @@ namespace AdventOfCode2024.Tools
         {
             // Create rows
             Rows = [];
-            for (int y = 0; y < Height; y++)
+            for (int y = 0; y < RowCount; y++)
             {
                 List<CellInfo> row = [];
-                for (int x = 0; x < Width; x++)
+                for (int x = 0; x < ColCount; x++)
                 {
                     row.Add(_data[x, y]);
                 }
@@ -229,10 +239,10 @@ namespace AdventOfCode2024.Tools
 
             // Create columns
             Cols = [];
-            for (int x = 0; x < Width; x++)
+            for (int x = 0; x < ColCount; x++)
             {
                 List<CellInfo> col = [];
-                for (int y = 0; y < Height; y++)
+                for (int y = 0; y < RowCount; y++)
                 {
                     col.Add(_data[x, y]);
                 }
@@ -241,9 +251,9 @@ namespace AdventOfCode2024.Tools
 
             // Create cells
             Cells = [];
-            for (int y = 0; y < Height; y++)
+            for (int y = 0; y < RowCount; y++)
             {
-                for (int x = 0; x < Width; x++)
+                for (int x = 0; x < ColCount; x++)
                 {
                     Cells.Add(_data[x, y]);
                 }
