@@ -10,7 +10,8 @@ namespace AdventOfCode2024.Tools
         public class CellInfo(int x, int y, string value)
         {
             public Point Position { get; private set; } = new Point(x, y);
-            public string Value { get; private set; } = value;
+            public string Value { get; set; } = value;
+            public object? Tag { get; set; } = null;
 
             public override string ToString()
             {
@@ -22,30 +23,27 @@ namespace AdventOfCode2024.Tools
 
         public int RowCount { get; private set; }
 
-        public List<List<CellInfo>> Rows { get; private set; }
+        public List<List<CellInfo>> Rows { get; private set; } = [];
 
         public List<List<int>> RowsInt
         {
             get { return Rows.ConvertAll(r => r.ConvertAll(v => int.Parse(v.Value))); }
         }
 
-        public List<List<CellInfo>> Cols { get; private set; }
+        public List<List<CellInfo>> Cols { get; private set; } = [];
 
         public List<List<int>> ColInt
         {
             get { return Cols.ConvertAll(c => c.ConvertAll(v => int.Parse(v.Value))); }
         }
 
-        public List<CellInfo> Cells { get; private set; }
+        public List<CellInfo> Cells { get; private set; } = [];
 
         public QuickMatrix()
         {
             _data = new CellInfo[0, 0];
             ColCount = 0;
             RowCount = 0;
-            Rows = [];
-            Cols = [];
-            Cells = [];
         }
 
         public QuickMatrix(List<string> rawData, string separator = "", bool removeEmpty = false)
@@ -82,6 +80,14 @@ namespace AdventOfCode2024.Tools
 
             // Compute other properties
             ComputeOtherProperties();
+        }
+
+        public void ClearAllTags()
+        {
+            foreach (CellInfo cell in Cells)
+            {
+                cell.Tag = null;
+            }
         }
 
         public void RotateCounterClockwise()
@@ -201,13 +207,13 @@ namespace AdventOfCode2024.Tools
             ComputeOtherProperties();
         }
 
-        public CellInfo? Cell(Point p) => Cell(p.X, p.Y);
+        public CellInfo Cell(Point p) => Cell(p.X, p.Y);
 
-        public CellInfo? Cell(int x, int y)
+        public CellInfo Cell(int x, int y)
         {
             if (x < 0 || x >= ColCount || y < 0 || y >= RowCount)
             {
-                return null;
+                return new CellInfo(-1, -1, "");
             }
             return _data[x, y];
         }
