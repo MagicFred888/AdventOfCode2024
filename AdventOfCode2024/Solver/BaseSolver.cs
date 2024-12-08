@@ -51,6 +51,9 @@ namespace AdventOfCode2024.Solver
             string[] sampleDataFilePath = Directory.GetFiles(dataFolder, "Sample*.txt");
             foreach (string filePath in sampleDataFilePath)
             {
+                // Skip if empty
+                if (new FileInfo(filePath).Length == 0) continue;
+
                 // Split file name
                 string cleanFileName = Path.GetFileNameWithoutExtension(filePath);
                 cleanFileName = cleanFileName[(cleanFileName.IndexOf(_splitChar) + 1)..];

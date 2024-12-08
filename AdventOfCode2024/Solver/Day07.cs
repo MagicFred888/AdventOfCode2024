@@ -42,7 +42,7 @@
             return total.ToString();
         }
 
-        private bool CanMatch(long result, List<long> numbers, bool withCombination)
+        private static bool CanMatch(long result, List<long> numbers, bool withCombination)
         {
             // Check if we found a match
             if (numbers.Count == 1)
