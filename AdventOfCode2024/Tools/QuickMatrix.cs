@@ -12,6 +12,7 @@ public class QuickMatrix
         public Point Position { get; private set; } = new Point(x, y);
         public string Value { get; set; } = value;
         public object? Tag { get; set; } = null;
+        public bool IsValid => Position.X >= 0;
 
         public override string ToString()
         {
