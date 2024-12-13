@@ -86,7 +86,6 @@ namespace AdventOfCode2024.Solver
             // Test sample
             bool allTestPassed = true;
             List<string> results = [];
-            int testId = 1;
             foreach (DataSet ds in _sampleDataSet)
             {
                 // Check if must be tested
@@ -97,6 +96,7 @@ namespace AdventOfCode2024.Solver
                 _stopwatch.Restart();
                 string answer = roundId == RoundId.FirstRound ? GetSolution1() : GetSolution2();
                 _stopwatch.Stop();
+                string testId = Regex.Match(Path.GetFileNameWithoutExtension(ds.TestFileName), "^[a-zA-Z]*?(?<TestID>\\d+)_").Groups["TestID"].Value;
                 if (answer == ds.RoundIdAnswers[(int)roundId])
                 {
                     results.Add($"SAMPLE {testId} PASSED: {answer} found in {GetProperUnitAndRounding(_stopwatch.Elapsed.TotalMilliseconds)}");
