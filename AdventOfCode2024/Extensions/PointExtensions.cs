@@ -28,6 +28,11 @@ public static class PointExtensions
         return new Point(p1.X + p2.X, p1.Y + p2.Y);
     }
 
+    public static Point Add(this Point p1, int x, int y)
+    {
+        return new Point(p1.X + x, p1.Y + y);
+    }
+
     public static Point Multiply(this Point p, int factor)
     {
         return new Point(p.X * factor, p.Y * factor);

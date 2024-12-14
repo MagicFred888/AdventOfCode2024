@@ -1,10 +1,29 @@
-﻿using System.Diagnostics;
+﻿using AdventOfCode2024.Extensions;
+using System.Diagnostics;
 using System.Drawing;
 
 namespace AdventOfCode2024.Tools;
 
+public enum TouchingMode
+{
+    Horizontal,
+    Vertical,
+    Diagonal,
+    All
+}
+
 public class QuickMatrix
 {
+    private bool[,] _touchingSearch;
+
+    private Dictionary<TouchingMode, List<Point>> _touchingMode = new()
+    {
+        { TouchingMode.Horizontal, new() { new Point(-1, 0), new Point(1, 0) } },
+        { TouchingMode.Vertical, new() { new Point(0, -1), new Point(0, 1) } },
+        { TouchingMode.Diagonal, new() { new Point(-1, -1), new Point(1, 1), new Point(-1, 1), new Point(1, -1) } },
+        { TouchingMode.All, new() { new Point(-1, -1), new Point(0, -1), new Point(1, -1), new Point(-1, 0), new Point(1, 0), new Point(-1, 1), new Point(0, 1), new Point(1, 1) } }
+    };
+
     private CellInfo[,] _data;
 
     public class CellInfo(int x, int y, string value)
@@ -45,6 +64,44 @@ public class QuickMatrix
         _data = new CellInfo[0, 0];
         ColCount = 0;
         RowCount = 0;
+    }
+
+    public QuickMatrix(int col, int row, string defaultValue = "")
+    {
+        ColCount = col;
+        RowCount = row;
+        _data = new CellInfo[col, row];
+        for (int y = 0; y < RowCount; y++)
+        {
+            for (int x = 0; x < ColCount; x++)
+            {
+                _data[x, y] = new CellInfo(x, y, defaultValue);
+            }
+        }
+
+        // Compute other properties
+        ComputeOtherProperties();
+    }
+
+    public QuickMatrix(int col, int row, List<Point> filledCells, string filledCellsValue, string emptyCellsValue = "")
+    {
+        ColCount = col;
+        RowCount = row;
+        _data = new CellInfo[col, row];
+        for (int y = 0; y < RowCount; y++)
+        {
+            for (int x = 0; x < ColCount; x++)
+            {
+                _data[x, y] = new CellInfo(x, y, emptyCellsValue);
+            }
+        }
+        foreach (Point p in filledCells)
+        {
+            _data[p.X, p.Y].Value = filledCellsValue;
+        }
+
+        // Compute other properties
+        ComputeOtherProperties();
     }
 
     public QuickMatrix(List<string> rawData, string separator = "", bool removeEmpty = false)
@@ -267,11 +324,38 @@ public class QuickMatrix
         }
     }
 
-    public void Print()
+    public void DebugPrint()
     {
         foreach (List<CellInfo> row in Rows)
         {
             Debug.WriteLine(row.Aggregate("", (acc, cell) => acc + cell.Value));
         }
+    }
+
+    public List<CellInfo> GetTouchingCellsWithValue(Point position, TouchingMode touchingMode)
+    {
+        _touchingSearch = new bool[ColCount, RowCount];
+        return SearchTouchingCellsWithValue(position, touchingMode);
+    }
+
+    private List<CellInfo> SearchTouchingCellsWithValue(Point position, TouchingMode touchingMode)
+    {
+        // Already visited
+        if (_touchingSearch[position.X, position.Y])
+        {
+            return [];
+        }
+        _touchingSearch[position.X, position.Y] = true;
+        List<CellInfo> result = [Cell(position)];
+        string targetValue = result[0].Value;
+        foreach (Point move in _touchingMode[touchingMode])
+        {
+            Point nextPosition = position.Add(move);
+            if (Cell(nextPosition).IsValid && Cell(nextPosition).Value == targetValue)
+            {
+                result.AddRange(SearchTouchingCellsWithValue(nextPosition, touchingMode));
+            }
+        }
+        return result;
     }
 }
