@@ -14,6 +14,9 @@ namespace AdventOfCode2024.Solver
         [GeneratedRegex(@"^Day(?<day>\d+)$")]
         private static partial Regex ExtractDayNumberRegex();
 
+        [GeneratedRegex(@"^[a-zA-Z]*?(?<TestID>\d+)_")]
+        private static partial Regex ExtractSampleIdRegex();
+
         private readonly int day;
 
         private sealed class DataSet
@@ -96,7 +99,7 @@ namespace AdventOfCode2024.Solver
                 _stopwatch.Restart();
                 string answer = roundId == RoundId.FirstRound ? GetSolution1() : GetSolution2();
                 _stopwatch.Stop();
-                string testId = Regex.Match(Path.GetFileNameWithoutExtension(ds.TestFileName), "^[a-zA-Z]*?(?<TestID>\\d+)_").Groups["TestID"].Value;
+                string testId = ExtractSampleIdRegex().Match(Path.GetFileNameWithoutExtension(ds.TestFileName)).Groups["TestID"].Value;
                 if (answer == ds.RoundIdAnswers[(int)roundId])
                 {
                     results.Add($"SAMPLE {testId} PASSED: {answer} found in {GetProperUnitAndRounding(_stopwatch.Elapsed.TotalMilliseconds)}");

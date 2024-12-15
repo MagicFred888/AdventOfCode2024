@@ -16,7 +16,7 @@ public class QuickMatrix
 {
     private bool[,] _touchingSearch;
 
-    private Dictionary<TouchingMode, List<Point>> _touchingMode = new()
+    private readonly Dictionary<TouchingMode, List<Point>> _touchingMode = new()
     {
         { TouchingMode.Horizontal, new() { new Point(-1, 0), new Point(1, 0) } },
         { TouchingMode.Vertical, new() { new Point(0, -1), new Point(0, 1) } },
@@ -62,6 +62,7 @@ public class QuickMatrix
     public QuickMatrix()
     {
         _data = new CellInfo[0, 0];
+        _touchingSearch = new bool[0, 0];
         ColCount = 0;
         RowCount = 0;
     }
@@ -71,6 +72,7 @@ public class QuickMatrix
         ColCount = col;
         RowCount = row;
         _data = new CellInfo[col, row];
+        _touchingSearch = new bool[col, row];
         for (int y = 0; y < RowCount; y++)
         {
             for (int x = 0; x < ColCount; x++)
@@ -88,6 +90,7 @@ public class QuickMatrix
         ColCount = col;
         RowCount = row;
         _data = new CellInfo[col, row];
+        _touchingSearch = new bool[col, row];
         for (int y = 0; y < RowCount; y++)
         {
             for (int x = 0; x < ColCount; x++)
@@ -135,6 +138,7 @@ public class QuickMatrix
                 }
             }
         }
+        _touchingSearch = new bool[ColCount, RowCount];
 
         // Compute other properties
         ComputeOtherProperties();
