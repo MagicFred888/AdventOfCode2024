@@ -362,4 +362,10 @@ public class QuickMatrix
         }
         return result;
     }
+
+    public List<CellInfo> CellsAtManhattanDistance(Point refPosition, int manhattanDistance)
+    {
+        // Get all cells at manhattan distance
+        return Cells.FindAll(c => Math.Abs(c.Position.X - refPosition.X) + Math.Abs(c.Position.Y - refPosition.Y) == manhattanDistance);
+    }
 }
